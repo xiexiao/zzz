@@ -1,0 +1,46 @@
+﻿<%page args="current=''" />\
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </a><a class="brand" href="#">Admin Panel</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown"><a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-user"></i>${user_name}<i class="caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a tabindex="-1" href="/admin/profile">我的设置</a> </li>
+                            <li><a tabindex="-1" href="/" target="_blank">查看主页</a> </li>
+                            <li class="divider"></li>
+                            <li><a tabindex="-1" href="/admin/logout">退出</a> </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav">
+                  <li 
+                    % if current=='index':
+                    class="active"
+                    % endif 
+                    ><a href="/admin">主页</a></li>
+                  <li
+                    % if current=='posts':
+                    class="active"
+                    % endif
+                    ><a href="/admin/posts">文章</a></li>
+                  <li
+                    % if current=='comments':
+                    class="active"
+                    % endif
+                    ><a href="/admin/comments">评论</a></li>
+                  <li
+                    % if current=='settings':
+                    class="active"
+                    % endif
+                    ><a href="/admin/settings">网站配置</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>

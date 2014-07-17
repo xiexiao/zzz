@@ -1,0 +1,95 @@
+﻿## details.html
+<%inherit file="base.html"/>
+
+<%block name="title">${site_name} - 归档</%block>
+<%block name="navbar">\
+<%include file="navbar.html" args="current=u''" />\
+</%block>
+
+<%block name="content">
+<h3>文章: ${post.title}</h3>
+
+<div>
+  <h1><a href="/${post.url}" title="${post.title}">${post.title}</a></h1>
+  <p>
+    ${post.content}
+  </p>
+  <p class="zzz-p">
+    发表于 <span class="date">${post.pubdate.strftime("%Y年%m月%d日")}</span>
+% if post.taglist:
+        | 标签有
+    % for tag in post.taglist.split('|'): 
+          <a href="${'/tags/'+tag}">${tag}</a>
+    % endfor
+% endif
+  </p>
+</div>
+
+<h3 name="comments">评论</h3>
+%if post_comments:
+
+<div class="row-fluid marketing" style="font-size: 10pt">
+  <div class="span8">
+%for index,comment in enumerate(post_comments):
+  %if index%2:
+    <p style="clear:both;padding:3px;" id="comment-${comment.id}">
+  %else:
+    <p style="clear:both;padding:3px;" id="comment-${comment.id}">
+  %endif
+      <span style="font-weight: bold; font-size: 12pt">${comment.username | h}</span> 发表于 
+      <span style="font-weight: bold; color: #bcbcbc; font-size: 10pt">${comment.adddate.strftime("%Y年%m月%d日")}</span><br />
+      ${comment.comment | x}
+    </p>
+%endfor
+  </div>
+% if page_current and page_count:
+<%include file="pagination.html" args="page_current=page_current, page_count=page_count, url=post.url, name='comment-page'" />\
+% endif
+</div>
+% endif
+
+% if msg:
+
+<h2 style="color:red"> ${msg} </h2>
+
+% endif
+        <form class="form-horizontal" method="post" name="comment-post">
+        <div class="control-group">
+            <label class="control-label" for="inputName">
+                姓名</label>
+            <div class="controls">
+                <input class="span3" type="text" name="name" id="inputName" placeholder="姓名">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">
+                电子邮件</label>
+            <div class="controls">
+                <input class="span3" type="email" name="email" id="inputEmail" placeholder="电子邮件">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputSite">
+                站点</label>
+            <div class="controls">
+                <input class="span3" type="text" name="site" id="inputSite" placeholder="站点">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputComment">
+                评论</label>
+            <div class="controls">
+                <textarea class="span4" rows="4" name="comment" id="inputComment" placeholder="评论"></textarea>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="hidden" name="id" value="${post.id}" />
+                ${xsrf_form_html()}
+                <button type="submit" class="btn btn-primary">
+                    发表评论</button>
+            </div>
+        </div>
+        </form>
+
+</%block>

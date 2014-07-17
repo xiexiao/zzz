@@ -1,0 +1,67 @@
+﻿## index.html
+<%inherit file="base.html"/>
+
+<%block name="title">
+管理后台 - 主页
+</%block>
+
+<%block name="navbar">
+<%include file="navbar.html" args="current=u'index'" />
+</%block>
+
+<%block name="sidebar">
+<%include file="sidebar_index.html" args="current=u'index'" />
+</%block>
+
+<%block name="content">
+<!-- block -->
+                            <div class="block">
+                                <div class="navbar navbar-inner block-header">
+                                    <div class="muted pull-left">统计</div>
+                                </div>
+                                <div class="block-content collapse in">
+
+          <div class="table-toolbar">
+                                      <div class="btn-group">
+                                         <a href="/admin?update_count"><button class="btn btn-success">更新统计</button></a>
+                                      </div>
+                                   </div>
+
+
+
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>类别</th>
+                                                <th>总数/已发布</th>
+                                                <th>最后更新</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>文章</td>
+                                                <td><a href="/admin/posts"><span class="badge badge-info">${posts_total}</span></a>
+                                                  <a href="/admin/posts"><span class="badge badge-success">${posts_available}</span></a></td>
+                                                <td>2014-05-12</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>评论</td>
+                                                <td><a href="/admin/comments"><span class="badge badge-info">${comments_total}</span></a>
+                                                  <a href="/admin/comments"><span class="badge badge-success">${comments_available}</span></a></td>
+                                                <td>2014-05-12</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>标签</td>
+                                                <td><a href="/admin/tags"><span class="badge badge-success">${tags_total}</span></a></td>
+                                                <td>2014-05-12</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- /block -->
+</%block>

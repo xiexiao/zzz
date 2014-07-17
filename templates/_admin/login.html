@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sign in</title>
+    <!-- Bootstrap -->
+    <link href="${static_url('bootstrap/css/bootstrap.min.css')}" rel="stylesheet" media="screen">
+    <link href="${static_url('bootstrap/css/bootstrap-responsive.min.css')}" rel="stylesheet" media="screen">
+    <link href="${static_url('assets/styles.css')}" rel="stylesheet" media="screen">
+     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="${static_url('vendors/modernizr-2.6.2-respond-1.1.0.min.js')}"></script>
+  </head>
+  <body id="login">
+    <div class="container">
+
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" class="input-block-level" placeholder="Username" name="user">
+        <input type="password" class="input-block-level" placeholder="Password" name="pass">
+        <label class="checkbox">
+          <input type="checkbox" value="true" name="remember"> Remember me
+        </label>
+	${xsrf_form_html()}
+<%block name="msg">
+                  % if flash:
+                  % if flash['error']:
+<div class="alert alert-error">
+  % else:
+<div class="alert alert-success">
+  % endif
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  ${flash['msg']}
+</div>
+% endif
+</%block>
+        <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+    <script src="${ static_url('vendors/jquery-1.9.1.min.js')}"></script>
+    <script src="${ static_url('bootstrap/js/bootstrap.min.js')}"></script>
+  </body>
+</html>

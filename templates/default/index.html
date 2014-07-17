@@ -1,0 +1,37 @@
+﻿## index.html
+<%inherit file="base.html"/>
+
+<%block name="title">${site_name} - 首页</%block>
+
+<%block name="navbar">\
+<%include file="navbar.html" args="current=u'main'" />\
+</%block>
+
+<%block name="content">
+% if posts:
+<div class="span8">
+    % for post in posts: 
+    <div>
+      <h2><a href="${post.url}">${post.title}</a></h2>
+      <p>${post.content}</p>
+      <p class="zzz-p">
+        发表于 <span class="date">${post.pubdate.strftime("%Y年%m月%d日")}</span>
+% if post.taglist:
+        | 标签有
+    % for tag in post.taglist.split('|'): 
+          <a href="${'tags/'+tag}">${tag}</a>
+    % endfor
+% endif
+% if post.commentnum:
+        | <a href="${post.url}#comments">${post.commentnum}个评论</a>
+% else:
+        | <a href="${post.url}#leave_acomment">没有评论</a>
+% endif
+      </p>
+    </div>
+    % endfor
+<%include file="pagination.html" args="page_current=page_current, page_count=page_count" />\
+</div>
+% endif
+\
+</%block>

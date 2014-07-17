@@ -1,0 +1,53 @@
+﻿## tags.html
+<%inherit file="base.html"/>
+<%block name="header"><%
+
+if mode_type=='tag':
+    context.page_name = '标签'
+    context.item_value = tag_item.tag
+    context.item_url = 'tags/'+tag_item.tag 
+    context.page_current = post_page_current
+    context.page_count = post_page_count
+elif mode_type=='archive':
+    context.page_name = '存档'
+    context.item_value = '%s-%s' % (first_day.year, first_day.month)
+    context.item_url = 'archives/'+context.item_value
+    context.page_current = post_page_current
+    context.page_count = post_page_count
+
+%>\
+</%block>
+<%block name="title">${site_name} - ${context.page_name}-${context.item_value}</%block>
+
+<%block name="navbar">\
+<%include file="navbar.html" args="current=u'tags'" />\
+</%block>
+
+<%block name="content">\
+<h3>${context.page_name}: ${context.item_value}</h3>
+
+<%include file="pagination.html" args="page_current=post_page_current, page_count=post_page_count, url=context.item_url" />\
+
+% if post_list:
+    % for post in post_list: 
+<h2><a href="/${post.url}">${post.title}</a></h2>
+  <p class="zzz-p">
+        发表于 <span class="date">${post.pubdate.strftime("%Y年%m月%d日")}</span>
+% if post.taglist:
+        | 标签有
+    % for tag in post.taglist.split('|'): 
+          <a href="${'/tags/'+tag}">${tag}</a>
+    % endfor
+% endif
+% if post.commentnum:
+        | <a href="/${post.url}#comments">${post.commentnum}个评论</a>
+% else:
+        | <a href="/${post.url}#leave_acomment">没有评论</a>
+% endif
+  </p>
+    % endfor
+% endif
+
+<%include file="pagination.html" args="page_current=post_page_current, page_count=post_page_count, url=context.item_url" />\
+
+</%block>

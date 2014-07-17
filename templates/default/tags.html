@@ -1,0 +1,36 @@
+﻿## tags.html
+<%inherit file="base.html"/>
+
+<%block name="title">${site_name} - 标签</%block>
+
+<%block name="navbar">\
+<%include file="navbar.html" args="current=u'tags'" />\
+</%block>
+
+<%block name="content">\
+<h1 style="color: #08c;font-size:18pt">所有标签</h1>
+<%include file="pagination.html" args="page_current=tag_page_current, page_count=tag_page_count, url='tags/'" />\
+% if tags:
+<style>
+.tag_cloud{margin:22px 6px 22px 6px}
+.tag_cloud a{line-height: 158%;display:inline; margin: 8px}
+<%
+tag_max_nums = max([x.nums for x in tags])
+fontsize_range = range(8, 26, 2) 
+fontsize_index_max = len(fontsize_range) -1 
+%>\
+</style>
+<div class="tag_cloud">
+    % for tag in tags: 
+<%
+fontindex = int(round(tag.nums/float(tag_max_nums) * fontsize_index_max))
+tag_fontsize = fontsize_range[fontindex]
+%>\
+<a href="${'/tags/'+tag.tag}" title="${tag.nums} 个话题" style="font-size:${tag_fontsize}pt;">${tag.tag}</a>
+    % endfor
+</div>
+% endif
+##
+##
+<%include file="pagination.html" args="page_current=tag_page_current, page_count=tag_page_count, url='tags/'" />\
+</%block>

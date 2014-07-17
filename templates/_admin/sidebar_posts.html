@@ -1,0 +1,20 @@
+﻿<%page args="current=''" />\
+<div class="span3" id="sidebar">
+    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+      <li
+        % if current=='posts':
+          class="active"
+        % endif
+        ><a href="/admin/posts"><i class="icon-chevron-right"></i>文章</a></li>
+      <li
+        % if current=='comments':
+          class="active"
+        % endif
+        ><a href="/admin/comments"><i class="icon-chevron-right"></i>评论</a></li>
+      <li
+        % if current=='tags':
+          class="active"
+        % endif
+        ><a href="/admin/tags"><i class="icon-chevron-right"></i>标签</a></li>
+    </ul>
+</div>

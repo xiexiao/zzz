@@ -1,0 +1,44 @@
+﻿## archives.html
+<%inherit file="base.html"/>
+
+<%block name="title">${site_name} - 归档</%block>
+
+<%block name="navbar">\
+<%include file="navbar.html" args="current=u'archives'" />\
+</%block>
+
+<%block name="content">\
+<h1 style="color: #08c;font-size:18pt">按年份存档</h1>
+% if archives_count:
+<style>
+<%
+year_str = None
+year_count = {} 
+for k in archives_count:
+    year_count.setdefault(k.year, []).append(archives_count[k])
+%>\
+.archive_list{margin:22px 6px 22px 6px}
+.tag_cloud a{line-height: 158%;display:inline;}
+</style>
+<div class="archive_list">
+    % for arc in sorted(archives_count.keys(), reverse=True): 
+      % if year_str is None or year_str != arc.year: 
+<%
+year_str = arc.year
+y_count = sum(year_count[year_str])
+%>\
+<h2><a name="${year_str}"></a>${year_str} (${y_count})</h2>
+      % endif
+<%
+month_str = arc.strftime('%Y-%m')
+month_count = str(archives_count[arc])
+%>\
+<li><a href="${'/archives/'+month_str}" title="${month_count} 个话题">${month_str}</a> (${month_count})</li>
+    % endfor
+</div>
+% endif
+##
+##
+##
+##
+</%block>

@@ -1,0 +1,75 @@
+﻿<%page args="page_current=1, page_count=0, url='', name='page'" />\
+<%
+if url and not url.endswith('/'):
+  url = url + '/'
+if url and not url.startswith('/'):
+  url = '/' + url
+if not url:
+  url = '/'
+page_prev=page_current-1
+page_next=page_current+1
+
+page_break_first=page_current-3
+page_break_end=page_current+3
+
+%>\
+% if page_count>0:
+<div class="dataTables_paginate paging_bootstrap pagination">
+  <ul>
+% if page_current==1:
+    <li class="disabled"><span>首页</span></li>
+    <li class="disabled"><span>上页</span></li>
+% else:
+    <li><a href="${url}">首页</a></li>
+    % if page_prev==1:
+    <li><a href="${url}">上页</a></li>
+    % else:
+    <li><a href="${url}${name}${page_prev}">上页</a></li>
+    % endif
+% endif
+\
+% for page in xrange(1, page_count+1):
+<%
+need_this=False
+if page <= 2:
+  #开始补位
+  need_this=True
+elif page > (page_count-2):
+  #最后补位
+  need_this=True
+elif page_break_first <= page <= page_break_end:
+  #中间补位
+  need_this=True
+%>\
+  % if page == page_break_first:
+    % if page_current>6:
+    <li class="disabled"><span>...</span></li>
+    % endif
+  % endif
+  % if need_this:
+    % if page_current==page:
+    <li class="active"><span>${page}</span></li>
+    % else:
+      % if page==1:
+    <li><a href="${url}">${page}</a></li>
+      % else:
+    <li><a href="${url}${name}${page}">${page}</a></li>
+      % endif
+    % endif
+  % endif
+  % if page == page_break_end:
+    % if page_current<page_count-5:
+    <li class="disabled"><span>...</span></li>
+    % endif
+  % endif
+% endfor
+% if page_current==page_count:
+    <li class="disabled"><span>下页</span></li>
+    <li class="disabled"><span>尾页</span></li>
+% else:
+<li><a href="${url}${name}${page_next}">下页</a></li>
+<li><a href="${url}${name}${page_count}">尾页</a></li>
+% endif
+  </ul>
+</div>
+% endif

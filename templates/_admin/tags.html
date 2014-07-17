@@ -1,0 +1,62 @@
+﻿## tags.html
+<%inherit file="base.html"/>
+<%block name="title">
+管理后台 - 标签
+</%block>
+
+<%block name="css_head">
+            <link href="${static_url('assets/DT_bootstrap.css')}" rel="stylesheet" media="screen">
+</%block>
+
+<%block name="navbar">
+<%include file="navbar.html" args="current=u''" />
+</%block>
+
+<%block name="sidebar">
+<%include file="sidebar_posts.html" args="current=u'tags'" />
+</%block>
+
+
+<%block name="content">
+ <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">标签列表</div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span12">
+                                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>名称</th>
+                                                <th>文章数量</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            % if tags:
+                                            % for t in tags:
+                                            <tr class="odd">
+                                              <td>${t.tag}</td>
+                                              <td class="center">${t.nums}</td>
+                                            </tr>
+                                            % endfor
+                                            % endif 
+                                        </tbody>
+                                    </table>
+                                   <div class="table-toolbar">
+                                      <div class="span6">
+                                        % if total_count:
+                                        显示 ${start_index + 1} 到 ${start_last} ， 总数 ${total_count} 。
+                                        % endif
+                                      </div>
+                                      <div class="span6">
+                                        <%include file="pagination.html" args="page_current=page_current, page_count=page_count, url='/admin/tags/'" />\
+                                      </div>
+                                   </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /block -->
+</%block>

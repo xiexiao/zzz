@@ -1,0 +1,38 @@
+﻿<%page args="current=''" />\
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="/">${site_name}</a>
+      <ul class="nav">
+% if current=='main':
+        <li class="active">\
+% else:
+        <li>\
+% endif
+<a href="/">首页</a></li>
+% if current=='archives':
+        <li class="active">\
+% else:
+        <li>\
+% endif
+<a href="/archives" title="归档">归档</a></li>
+% if current=='tags':
+        <li class="active">\
+% else:
+        <li>\
+% endif
+<a href="/tags" title="标签">标签</a></li>
+      </ul>
+      <form class="navbar-form pull-right" action="//google.com/search" method="get" accept-charset="utf-8">
+          <a href="/rss" target="_blank"><button class="btn btn-mini btn-primary zzz-btn-rss" type="button">RSS</button></a>
+          <div class="input-append">
+            <input class="input-small zzz-input-search" type="search" name="q" placeholder="搜索"/>
+            <input type="hidden" name="q" value="site:${site_url}">
+            <button class="btn btn-primary btn-mini zzz-btn-search">
+              <i class=" icon-search icon-white"></i>
+            </button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

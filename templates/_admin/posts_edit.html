@@ -1,0 +1,217 @@
+﻿## posts.html
+<%inherit file="base.html"/>
+<%block name="title">
+管理后台 - 文章
+</%block>
+
+<%block name="css_head">
+<link rel="stylesheet" type="text/css" href="${static_url('vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.css')}"></link>
+</%block>
+
+
+<%block name="navbar">
+<%include file="navbar.html" args="current=u'posts'" />
+</%block>
+
+<%block name="sidebar">
+<%include file="sidebar_posts.html" args="current=u'posts'" />
+</%block>
+
+<%block name="content">
+<!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                              <div class="muted pull-left">
+                                % if pid:
+                                编辑文章：
+                                % else :
+                                添加文章：
+                                % endif 
+                              </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span12">
+					<!-- BEGIN FORM-->
+					<form method="post" id="form_settings" class="form-horizontal">
+						<fieldset>
+							<div class="alert alert-error hide">
+								<button class="close" data-dismiss="alert"></button>
+                表格有错误，请检查。
+							</div>
+					  <div class="alert alert-success hide">
+						  </div>
+
+  							<div class="control-group">
+  								<label class="control-label">标题<span class="required">*</span></label>
+  								<div class="controls">
+                    <input type="text" id="p_title" name="title" data-required="1" class="span8 m-wrap" value="${post.title | h}"/>
+  								</div>
+  							</div>
+  							<div class="control-group">
+  								<label class="control-label">地址<span class="required">*</span></label>
+  								<div class="controls">
+  									<input name="url" id="p_url" type="text" class="span8 m-wrap" value="${post.url | u}"/>
+  								</div>
+  							</div>
+                <div class="control-group">
+  								<label class="control-label">标签</label>
+  								<div class="controls">
+                    <input name="taglist" id="p_taglist" type="text" class="span8 m-wrap" value="${post.taglist | h}"/>
+                    <span class="help-block">符号 | 分隔多个标签</span>
+  								</div>
+  							</div>
+  							<div class="control-group">
+  								<label class="control-label">内容<span class="required">*</span></label>
+  								<div class="controls">
+                    <textarea name="content" id="p_content" rows="15" data-required="1" class="span10 m-wrap">${post.content | h}</textarea>
+  								</div>
+  							</div>
+                <div class="control-group">
+  								<label class="control-label">是否发布</label>
+  								<div class="controls">
+                    <input name="ispass" id="p_ispass" type="checkbox" class="m-wrap" value="on" 
+                    % if post.ispass:
+                    checked="true"
+                    % endif
+                    >
+  								</div>
+  							</div>
+                <div class="control-group">
+  								<label class="control-label">添加时间<span class="required">*</span></label>
+  								<div class="controls">
+                    <input name="pubdate" id="p_pubdate" type="text" class="span4 m-wrap" value="${post.pubdate.strftime('%Y-%m-%d %H:%M')}"/>
+  								</div>
+  							</div>
+  							<div class="form-actions">
+                  ${xsrf_form_html()}
+  								<button type="submit" class="btn btn-primary">保存修改</button>
+  							</div>
+						</fieldset>
+					</form>
+					<!-- END FORM-->
+				</div>
+			    </div>
+			</div>
+    <!-- /block -->
+</%block>
+
+<%block name="script_end">
+<script src="${static_url('vendors/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js')}"></script>
+<script src="${static_url('vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js')}"></script>
+<script type="text/javascript" src="${static_url('vendors/jquery-validation/dist/jquery.validate.min.js')}"></script>
+</%block>
+
+<%block name="script">
+<script>
+jQuery(document).ready(function() {   
+    // Bootstrap
+    $('#p_content').wysihtml5();
+var FormValidation = function () {
+    var handleValidation1 = function() {
+            var form1 = $('#form_settings');
+            var error1 = $('.alert-error', form1);
+            var success1 = $('.alert-success', form1);
+
+            form1.validate({
+                errorElement: 'span', //default input error message container
+                errorClass: 'help-inline', // default input error message class
+                focusInvalid: false, // do not focus the last invalid input
+                ignore: "",
+                rules: {
+                    title: {
+                        minlength: 1,
+                        required: true
+                    },
+                    url: {
+                        required: true,
+                        minlength: 1
+                    },
+                    content: {
+                        required: true,
+                        minlength: 1
+                    }
+                },
+
+                invalidHandler: function (event, validator) { //display error alert on form submit              
+                    success1.hide();
+                    error1.show();
+                    FormValidation.scrollTo(error1, -200);
+                },
+
+                highlight: function (element) { // hightlight error inputs
+                    $(element)
+                        .closest('.help-inline').removeClass('ok'); // display OK icon
+                    $(element)
+                        .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+                },
+
+                unhighlight: function (element) { // revert the change done by hightlight
+                    $(element)
+                        .closest('.control-group').removeClass('error'); // set error class to the control group
+                },
+
+                success: function (label) {
+                    label
+                        .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('errNoneor').addClass('success'); // set success class to the control group
+                },
+
+submitHandler: function (form) {
+                 var _xsrf = $("[name='_xsrf']")[0].value;
+                 var title = $('#p_title')[0].value;
+                 var url= $('#p_url')[0].value;
+                 var taglist= $('#p_taglist')[0].value;
+                 var content = $('#p_content')[0].value;
+                 var ispass = $('#p_ispass')[0].checked;
+                 var pubdate = $('#p_pubdate')[0].value;
+                 $.ajax({
+  url: "",
+  type : 'POST', 
+  data: {
+  title:title,
+  url:url,
+  taglist:taglist,
+  content:content,
+  ispass:ispass,
+  pubdate:pubdate,
+    _xsrf:_xsrf
+  }
+}).done(function(data) {
+  if(data && data.error){
+    error1[0].innerText = data.msg;
+    error1.show();
+    success1.hide();
+    }else{
+    if(data.url){
+        window.location.href=data.msg;
+      }else{
+      success1[0].innerText = data.msg;
+      success1.show();
+      error1.hide();
+      }
+    }
+});
+                }
+            });
+    }
+
+    return {
+        init: function () {
+            handleValidation1();
+
+        },
+        scrollTo: function (el, offeset) {
+            pos = el ? el.offset().top : 0;
+            jQuery('html,body').animate({
+                    scrollTop: pos + (offeset ? offeset : 0)
+                }, 'slow');
+        }
+
+    };
+
+}();
+
+	   FormValidation.init();
+	});
+</script>
+</%block>

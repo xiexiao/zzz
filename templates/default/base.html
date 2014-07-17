@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head><%block name="header"/>
+  <title><%block name="title"/></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="${ static_url('bootstrap/css/bootstrap.min.css') }" rel="stylesheet" media="screen"/>
+  <style>
+    body { padding-top: 60px;}
+    .navbar-form .zzz-btn-rss{ margin: -2px 0 3px 0}
+    .navbar-form .zzz-input-search{font-size: 10pt; padding: 2px;}
+    .navbar-form .zzz-btn-search { padding: 4px 2px 0 2px;}
+    .zzz-p{ font-size:10pt}
+    .zzz-p .date{ font-weight: bold; color: #bcbcbc; font-size: 10pt}
+    .zzz-p a{font-weight: bold; color: #bcbcbc; font-size: 10pt}
+    .zzz-form .control-label{width:80px}
+    .zzz-form .controls{margin-left:90px}
+    .zzz-clear{clear:both}
+  </style>
+  <link href="${ static_url('bootstrap/css/bootstrap-responsive.css') }" rel="stylesheet"/>
+  <link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<body>
+##
+<%block name="navbar"/>\
+<div class="container">\
+<%block name="content"/>\
+\
+<%block name="footer">\
+<hr class="zzz-clear"/>
+<footer>
+  <p class="pull-right"><a href="#">Back to top</a></p>
+  <p>&#169; 2013 ${site_name}. </p>
+</footer>\
+##
+</%block>
+</div>
+% if debug:
+<!-- r:${ request.request_time() }\
+    % if db_query_times:
+  / q:${len(db_query_times)} / qtime:${sum(db_query_times)}
+        % for query_time in db_query_times:
+  ${loop.index+1} > ${query_time}
+        % endfor
+    % endif
+-->
+% endif
+</body>
+</html>
