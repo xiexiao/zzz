@@ -69,8 +69,10 @@ class Login(AdminHandler):
             self.set_current_user(name, expires_days)
             self.redirect("/admin/")
         else:
-            self.set_flash({'error': True, 'msg': u"登录失败"})
-            self.redirect(u"/admin/login")
+            d = {}
+            d['flash'] = {'error': True, 'msg': u"登录失败"}
+            d['name'] = name
+            self.render('login.html', **d)
     def set_current_user(self, user, expires_days = None):
         if user:
             self.set_secure_cookie("user", tornado.escape.json_encode(user),
