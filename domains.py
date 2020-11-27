@@ -2,9 +2,10 @@
 '''
 zzz domains
 '''
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#import sys
+#from imp import reload
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 from sqlalchemy import Table, Column, ForeignKey, MetaData
 from sqlalchemy import Integer, Boolean
@@ -89,8 +90,9 @@ class User(Base):
         self.username = username
         self.nickname = username
         m = hashlib.md5()
-        m.update(pwd)
-        self.pwd = unicode(m.hexdigest(), 'utf-8')
+        m.update(pwd.encode('utf8'))
+        #self.pwd = unicode(m.hexdigest(), 'utf-8')
+        self.pwd = m.hexdigest()
         self.mail = mail
 
 class Comment(Base):
@@ -177,8 +179,8 @@ def update_post_tags(db, post_id, tags, oldtags):
             filter(post_tag.c.tag_id==o.id).\
             first()
         if ptag:
-            print '===================='
-            print ptag
+            print('====================')
+            print(ptag)
             db.delete(ptag)
     #更新统计
     alls = tags + [o for o in oldtags if o.tag not in names]
@@ -208,7 +210,8 @@ def update_option(db, name, value):
         filter(Option.name == name).first()
     if not count:
         count = Option(name, None)
-    count.value = unicode(str(value), 'utf8')
+    #count.value = unicode(str(value), 'utf8')
+    count.value = str(value)
     db.add(count)
 
 def update_post_commentnum(db):
@@ -219,12 +222,12 @@ def update_post_commentnum(db):
         post_ids = [x[0] for x in post_ids]
     for post_id in post_ids:
         comment_count = update_post_count(db, post_id)
-        print '\r updating: \t post_id:%d comments: %d' \
-            % (post_id, comment_count),
+        print('\r updating: \t post_id:%d comments: %d' \
+            % (post_id, comment_count)),
     db.commit()
-    print '\r\n',
-    print ' total : %s' % len(post_ids)
-    print '\r\n',
+    print('\r\n'),
+    print(' total : %s' % len(post_ids))
+    print('\r\n'),
 
 def update_tag_post(db, tag_id):
     '''更新Tag的文章数量'''
@@ -240,7 +243,8 @@ def update_tag_post(db, tag_id):
 
 #更新月份记录文章记录
 import datetime
-import cPickle
+import _pickle as cPickle
+#import cPickle
 def update_db_month(db):
     '''update_db_month'''
     pubdate_max = db.query(Post.pubdate).\
@@ -309,12 +313,13 @@ def update_archives_count(db, min_date, max_date):
             count1 = Option(option_name, None)
         else:
             try:
-                db_vals = cPickle.loads(str(count1.value))
+                db_vals = cPickle.loads(count1.value)
             except cPickle.UnpicklingError :
                 pass
         db_vals.update(month_counts)
         option_value = cPickle.dumps(db_vals)
-        count1.value = unicode(option_value, 'utf8')
+        #count1.value = unicode(option_value, 'utf8')
+        count1.value = option_value
         db.add(count1)
 
 def get_archives_count(db):
@@ -325,7 +330,7 @@ def get_archives_count(db):
     db_vals = {}
     if counts and counts.value:
         try:
-            db_vals = cPickle.loads(str(counts.value))
+            db_vals = cPickle.loads(counts.value)
         except cPickle.UnpicklingError :
             pass
     return db_vals

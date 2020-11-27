@@ -59,9 +59,10 @@ class Login(AdminHandler):
             filter(User.username==name).\
             first()
         m = hashlib.md5()
-        m.update(pwd)
+        m.update(pwd.encode('utf8'))
 
-        md5_pwd = unicode(m.hexdigest(), 'utf-8')
+        #md5_pwd = unicode(m.hexdigest(), 'utf-8')
+        md5_pwd = m.hexdigest()
         if user and user.pwd and md5_pwd == user.pwd:
             expires_days = None
             if remember:
@@ -192,7 +193,8 @@ class AdminProfile(AdminHandler):
             #修改密码
             m = hashlib.md5()
             m.update(pwd)
-            md5_pwd = unicode(m.hexdigest(), 'utf-8')
+            #md5_pwd = unicode(m.hexdigest(), 'utf-8')
+            md5_pwd = m.hexdigest()
 
             if user.pwd != md5_pwd:
                 self.set_flash({'error': True, 'msg': u"原密码错误"})
@@ -200,7 +202,7 @@ class AdminProfile(AdminHandler):
                 return
             m1 = hashlib.md5()
             m1.update(new_pwd)
-            user.pwd = unicode(m1.hexdigest(), 'utf-8')
+            user.pwd = m1.hexdigest()
         user.nickname = nickname
         user.mail = mail
         db.add(user)
@@ -245,7 +247,7 @@ class AdminPostsEdit(AdminHandler):
         db = self.db 
         d = {}
         user_name= self.get_current_user()
-        if pid >0:
+        if int(pid) > 0:
             post =  db.query(Post).\
                 filter(Post.id == int(pid)).\
                 first()
@@ -283,7 +285,7 @@ class AdminPostsEdit(AdminHandler):
             self.finish({'error': True, 'msg': u"请输入地址"})
             return
 
-        if pid >0:
+        if int(pid) > 0:
             msg = u'修改成功'
             post =  db.query(Post).\
                 filter(Post.id == int(pid)).\
@@ -319,7 +321,8 @@ class AdminPostsEdit(AdminHandler):
             return
         ispass = self.get_argument("ispass", None) 
         post.ispass = False
-        if ispass and ispass.lower()=='true':
+        print("ispass", ispass)
+        if ispass and (ispass.lower()=='true' or ispass.lower()=='on'):
             post.ispass = True
         post.title = title
         post.url = url
@@ -327,7 +330,8 @@ class AdminPostsEdit(AdminHandler):
         tags = []
         oldtags = []
         if taglist:
-            tags = [Tag(unicode(str(x), 'utf8')) for x in taglist.split('|') if len(x.strip())>0]
+            #tags = [Tag(unicode(str(x), 'utf8')) for x in taglist.split('|') if len(x.strip())>0]
+            tags = [Tag(str(x)) for x in taglist.split('|') if len(x.strip())>0]
             tags = domains.get_post_tags(db, tags)
         if post.tags:
             oldtags = post.tags
@@ -351,7 +355,7 @@ class AdminPostsEdit(AdminHandler):
         for t in alltags:
             domains.update_tag_post(db, t.id)
         db.commit()
-        if pid > 0:
+        if int(pid) > 0:
             self.finish({'error': False, 'msg': u"修改成功"})
             return
         else:

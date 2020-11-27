@@ -207,7 +207,7 @@ def _dict_to_xml_recurse(parent, dictitem):
     assert type(dictitem) is not type([])
 
     if isinstance(dictitem, dict):
-        for (tag, child) in dictitem.iteritems():
+        for (tag, child) in dictitem.items():
             if str(tag).startswith('__'):
                 parent.set(str(tag).lstrip('__'), str(child))
             elif str(tag) == '_text':
@@ -229,7 +229,7 @@ def dict_to_et(xmldict):
     """
     Converts a dictionary to an XML ElementTree Element 
     """
-    roottag = xmldict.keys()[0]
+    roottag = list(xmldict.keys())[0]
     root = ET.Element(roottag)
     _dict_to_xml_recurse(root, xmldict[roottag])
     return root

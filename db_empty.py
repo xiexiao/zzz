@@ -68,7 +68,7 @@ def initdb(db):
     return u
 
 if __name__ == '__main__':
-    print '=== create emptydb start ==='
+    print('=== create emptydb start ===')
     create_emptydb()
-    print '=== create emptydb end ==='
+    print('=== create emptydb end ===')
 

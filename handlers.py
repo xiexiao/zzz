@@ -96,7 +96,6 @@ class BaseHandler(tornado.web.RequestHandler):
 @route(r'/page([0-9]{1,6})', name='z.IndexPage')
 class IndexHandler(BaseHandler):
     '''首页'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self, page_current=1):
         db = self.db
@@ -131,7 +130,6 @@ class IndexHandler(BaseHandler):
 @route(r'/archives', name='z.Archives')
 class Archives(BaseHandler):
     '''Archives'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self):
         db = self.db
@@ -143,7 +141,6 @@ class Archives(BaseHandler):
         name='z.ArchivesListPage')
 class ArchivesList(BaseHandler):
     '''ArchivesList'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self, year, month, page_current=1):
         db = self.db
@@ -151,7 +148,7 @@ class ArchivesList(BaseHandler):
         year = utils.get_int(year)
         month = utils.get_int(month)
         first_day = None
-        if 13 > month > 0:
+        if 13 > int(month) > 0:
             first_day = datetime.datetime(year, month, 1)
         if first_day in d['archives_count']:
             archive_posts_count = d['archives_count'][first_day]
@@ -187,7 +184,6 @@ class ArchivesList(BaseHandler):
 @route(r'/tags/page([0-9]{1,6})', name='z.TagsPage')
 class Tags(BaseHandler):
     '''Tags'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self, page_current=1):
         db = self.db
@@ -218,7 +214,6 @@ class Tags(BaseHandler):
 @route(r'/tags/([^.///?]+)/page([0-9]{1,6})', name='z.TagsListPage')
 class TagsList(BaseHandler):
     '''TagsList'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self, tag_name, page_current=1):
         db = self.db
@@ -261,7 +256,6 @@ class TagsList(BaseHandler):
 @route(r'/rss', name='z.Rss')
 class Rss(BaseHandler):
     '''Rss'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self):
         self.set_header('Content-Type','text/xml')
@@ -318,7 +312,6 @@ class Rss(BaseHandler):
         name='z.DetailsComment', rank=-2)
 class Details(BaseHandler):
     '''Details'''
-    @tornado.web.asynchronous
     @dbhook(read_only=True)
     def get(self, url, page_current=1):
         db = self.db
@@ -340,6 +333,7 @@ class Details(BaseHandler):
 
             commentpass = post.commentpass
             comments = None
+            print(commentpass)
             if commentpass > 0:
                 comments = db.query(Comment).\
                     filter(Comment.post_id == post.id).\
@@ -357,7 +351,6 @@ class Details(BaseHandler):
             return self.render('details.html', **d)
         self.notfound()
 
-    @tornado.web.asynchronous
     @dbhook(read_only=False)
     def post(self, url, page_current=1):
         '''post'''
